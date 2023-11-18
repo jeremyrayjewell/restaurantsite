@@ -31,12 +31,12 @@ let generateShop = () => {
 
     return `
       <div id=product-id-${id} class="item">
-        <img width="220" src=${img} alt="" onclick="openModal${id}()">
+        <img width="220" src=${img} alt="" onclick="openModal${id}()" style="cursor: pointer;">
         <div class="details">
-          <h3 onclick="openModal${id}()">${name}</h3>
-          <p>${desc}</p>
+          <h3 onclick="openModal${id}()" style="cursor: pointer;">${name}</h3>
+          <p onclick="openModal${id}()" style="cursor: pointer;">${desc}</p>
           <div class="price-quantity">
-            <h5>₲  ${price} </h5>
+            <h5 onclick="openModal${id}()" style="cursor: pointer;">₲  ${price} </h5>
             <div class="buttons">
               <i onclick="decrement(${id})" class="bi bi-dash-lg"></i>
               <div id=${id} class="quantity">${
@@ -63,8 +63,6 @@ let generateShop = () => {
   `;
   }).join("");
 };
-
-generateShop();
 
 generateShop();
 

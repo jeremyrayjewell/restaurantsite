@@ -40,7 +40,14 @@ h3 {
   font-size: 25px;
   font-weight: 300;
   color: #72a80d;
-  text-shadow: -1px 0 rgb(165, 175, 28), 0 1px rgb(243, 7, 7)8), 1px 0 black, 0 -1px black;
+  text-shadow: 1px 1px rgba(238, 255, 0, 0.5), 0 1px rgb(243, 7, 7), 1px 0 rgba(0, 0, 0, 0.397), 0 -1px rgba(0, 0, 0, 0.205);
+  transition: color .3s ease-in-out; 
+}
+
+h3:hover {
+  color: #0ba324; /* Change to the color you want on hover */
+  text-shadow: 1px 1px rgb(238, 255, 0), 0 1px rgb(243, 7, 7), 1px 0 rgb(45, 105, 11)13)1, 49, 49), 0 -1px black;
+  font-weight: 600;
 }
 
 h2 {
@@ -364,10 +371,11 @@ h2 {
 }
 
 .cart-item-price {
-  background-color: #212529;
-  color: white;
+  color: rgb(75, 72, 72);
   border-radius: 4px;
   padding: 3px 6px;
+  font-style: italic;
+  font-size: x-small;
 }
 
 footer {
