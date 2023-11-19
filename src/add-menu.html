@@ -45,5 +45,35 @@
 
     <script src="menu.js" type="module"></script>
 
+
+      <div id="myModal" class="edit-item-modal">
+        <div class="modal-content">
+          <span class="close" style="cursor: pointer;">&times;</span>
+          <p>Editar</p>
+          <div class="modal-content">
+            <label for="edit-name-field">Nombre del producto (máximo 30 caracteres):</label>
+            <input type="text" id="edit-name-field" placeholder="Nombre" maxlength="30">
+            <br>
+            <label for="edit-price-field">Precio del producto en guaraníes (₲):</label>
+            <input type="number" id="edit-price-field" placeholder="Precio" min="0" max="1000000000">
+            <br>
+            <label for="edit-disc-field">Breve descripción (máximo 90 caracteres):</label><br>
+            <textarea id="edit-disc-field" placeholder="Breve descripción" maxlength="90"></textarea>
+            <br>
+            <label for="edit-longdisc-field">Descripción larga (máximo 375 caracteres):</label><br>
+            <textarea id="edit-longdisc-field" placeholder="Descripción larga" maxlength="375"></textarea>
+            <br>
+            <label for="edit-img-field">Editar nombres/rutas de archivos de imagen (máximo 18 caracteres):</label>
+            <input type="text" id="edit-img-field" placeholder="Prefijo de archivo" maxlength="18">
+            <input type="text" id="edit-gal1-field" placeholder="Prefijo de archivo" maxlength="18">
+            <input type="text" id="edit-gal2-field" placeholder="Prefijo de archivo" maxlength="18">
+            <input type="text" id="edit-gal3-field" placeholder="Prefijo de archivo" maxlength="18">
+            <br><hr>
+            <button id="save-button">Guardar cambios</button>
+          </div>
+        </div>
+      </div>
+      
+
 </body>
 </html>

@@ -115,14 +115,49 @@ function renderItems(item, id) {
     deleteButton.className = "delete-button";
     deleteButton.addEventListener("click", () => {
         const userConfirmed = confirm("⚠️⚠️¿Quieres eliminar permanentemente este artículo?⚠️⚠️");
-    if (userConfirmed) {
-        itemEl.remove();
+        if (userConfirmed) {
+            itemEl.remove();
+            const itemRef = ref(database, 'items/' + id);
+            remove(itemRef);
+        }
+    });
+    
+    let modal = document.getElementById('myModal');
+    let span = document.getElementsByClassName("close")[0];
 
-        const itemRef = ref(database, 'items/' + id);
-        remove(itemRef);
-    }
-});
+
+    const editButton = document.createElement("button");
+    editButton.style.backgroundColor = "blue";
+    editButton.style.color = "white";
+    editButton.style.border = "none";
+    editButton.style.padding = "5px";
+    editButton.style.width = "15px";
+    editButton.style.height = "15px";
+    editButton.style.opacity = "0.5";
+    editButton.textContent = "E";
+    editButton.style.fontSize = "7px";
+    editButton.className = "edit-button";
+    editButton.addEventListener("click", () => {
+        modal.style.display = "block";
+        document.getElementById('edit-name-field').placeholder = item.name;
+        document.getElementById('edit-price-field').placeholder = item.price;
+        document.getElementById('edit-disc-field').placeholder = item.disc;
+        document.getElementById('edit-longdisc-field').placeholder = item.longdisc;
+        document.getElementById('edit-img-field').placeholder = item.img;
+        document.getElementById('edit-gal1-field').placeholder = item.gal1;
+        document.getElementById('edit-gal2-field').placeholder = item.gal2;
+        document.getElementById('edit-gal3-field').placeholder = item.gal3;
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+    });
+
+    
 
     itemEl.appendChild(deleteButton);
+    itemEl.appendChild(editButton);
     itemsListEl.appendChild(itemEl);
 }
+
+// editing
+
