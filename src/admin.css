@@ -209,3 +209,23 @@ button:hover {
 #sign-out-btn:hover span {
     visibility: visible;
 }
+
+/* Update */
+
+/* Add */
+
+.add-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+}
+
+textarea {
+    overflow: auto;
+}
+
+/* Inventory */
+
+/* Finances */
+
+/* Orders */

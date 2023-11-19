@@ -54,7 +54,41 @@
             <p>Actualizar el menú</p>
         </section>
         <section id="add-menu-view">
-            <p>Agregar al menú</p>
+            <h3>Agregar al menú</h3>
+            <div class="add-container">
+
+                <label for="name-field">Nombre del producto (máximo 12 caracteres):</label>
+                <input type="text" id="name-field" placeholder="Nombre" maxlength="12">
+
+                <label for="disc-field">Breve descripción (máximo 30 palabras):</label>
+                <textarea id="disc-field" placeholder="Breve descripción" oninput="limitWords(this, 30)"></textarea>
+
+                <label for="longdisc-field">Descripción larga (mínimo 50, máximo 100 palabras):</label>
+                <textarea id="longdisc-field" placeholder="Descripción larga" oninput="limitWords(this, 50, 100)"></textarea>
+
+            <script>
+                function limitWords(textarea, limit) {
+                let words = textarea.value.split(' ');
+                    if (words.length > limit) {
+                        words = words.slice(0, limit);
+                        textarea.value = words.join(' ');
+                    }
+                }
+            </script>
+
+                <label for="file-field">El prefijo que forma la base de los archivos de imagen del producto:*</label>
+                <input type="text" id="file-field" placeholder="Prefijo de archivo">
+                <ul>
+                    <li>imagen principal: x.png </li>
+                    <li>imágenes secundarias: x1.png, x2.png, x3.png</li>
+                </ul>
+                <br>
+                <label for="add-button">Confirme todos los detalles antes de enviar.</label>
+                <button id="add-button">Agregar a la lista del menú</button>
+                <div class="note-container">
+                    <ul id="notes-list"></ul>
+                </div>
+            </div>
         </section>
         <section id="inventory-view">
             <p>Inventario</p>
