@@ -90,7 +90,17 @@ function clearPrefixFieldEl() {
 function renderItems(item, id) {
     const itemEl = document.createElement("li");
     
-    itemEl.innerHTML = ` ${item.name} <code>&#8212;</code> ₲${item.price} <br> Breve: ${item.disc} <br> Larga: ${item.longdisc} <br> Imágenes: ${item.img}, ${item.gal1}, ${item.gal2}, ${item.gal3} <br> ID de base de datos: ${id}`;
+    itemEl.innerHTML = ` 
+        <span style="font-weight: bold; font-size: 25px;">${item.name} </span> <code>&#8212;</code> ₲${item.price} 
+        <br><span style="font-style: italic;">Breve (disc):</span> ${item.disc} 
+        <br><span style="font-style: italic;">Larga (longdisc):</span> ${item.longdisc} 
+        <br><span style="font-style: italic;">Imágenes:</span><ul><li>${item.img}
+            </li><li>${item.gal1}
+            </li><li>${item.gal2}
+            </li><li>${item.gal3} 
+        </li></ul>
+        <span style="font-style: italic;">ID de base de datos:</span> ${id}`
+    ;
 
     const deleteButton = document.createElement("button");
     deleteButton.style.backgroundColor = "red";

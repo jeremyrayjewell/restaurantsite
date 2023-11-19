@@ -11,22 +11,26 @@
     <hr>
         <div class="add-container">
 
-            <label for="name-field">Nombre del producto (máximo 12 caracteres):</label>
-            <input type="text" id="name-field" placeholder="Nombre" maxlength="12">
+            <label for="name-field">Nombre del producto (máximo 30 caracteres):</label>
+            <input type="text" id="name-field" placeholder="Nombre" maxlength="30">
             <br>
             <label for="price-field">Precio del producto en guaraníes (₲):</label>
-            <input type="number" id="price-field" placeholder="Precio" min="0" max="1000">
+            <input type="number" id="price-field" placeholder="Precio" min="0" max="1000000000">
             <br>
-            <label for="disc-field">Breve descripción (máximo 30 palabras):</label>
-            <textarea id="disc-field" placeholder="Breve descripción"></textarea>
+            <label for="disc-field">Breve descripción (máximo 90 caracteres):</label>
+            <textarea id="disc-field" placeholder="Breve descripción" maxlength="90"></textarea>
             <br>
-            <label for="longdisc-field">Descripción larga (mínimo 50, máximo 100 palabras):</label>
-            <textarea id="longdisc-field" placeholder="Descripción larga"></textarea>
+            <label for="longdisc-field">Descripción larga (máximo 375 caracteres):</label>
+            <textarea id="longdisc-field" placeholder="Descripción larga" maxlength="375"></textarea>
             <br>
-            <label for="prefix-field">El prefijo que forma la base de los archivos de imagen del producto:</label>
-            <input type="text" id="prefix-field" placeholder="Prefijo de archivo">                <ul>
-               <li>imagen principal: x.png </li>
-                <li>imágenes secundarias: x1.png, x2.png, x3.png</li>
+            <label for="prefix-field">El prefijo que forma la base de los archivos de imagen del producto (máximo 13 caracteres):</label>
+            <input type="text" id="prefix-field" placeholder="Prefijo de archivo" maxlength="13">                
+            <ul style="font-size: smaller; margin-top: 0; list-style: square;">
+               <li>imagen principal:  
+                <ul style="font-style: italic; list-style: none;"><li>ejemplo.png</li></ul></li>
+               </li>
+                <li>imágenes secundarias: 
+                    <ul style="font-style: italic; list-style: none;"><li>ejemplo1.png</li><li>ejemplo2.png</li><li>ejemplo3.png</li></ul></li>
             </ul>
             <br>
             <br>
