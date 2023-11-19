@@ -28,6 +28,7 @@ onValue(itemsInDB, (snapshot) => {
 
 
 addButtonEl.addEventListener("click", () => {
+    // console.log("add button clicked");
     let nameValue = nameFieldEl.value.toLowerCase();    
     let priceValue = priceFieldEl.value;
     let discValue = discFieldEl.value;
@@ -39,15 +40,14 @@ addButtonEl.addEventListener("click", () => {
     alert("Por favor, complete todas las secciones.");
     }else {
         let item = {
-            id: item.key,
             name: nameValue,
             price: priceValue,
             disc: discValue,
             longdisc: longdiscValue,
-            img: prefixValue + ".png",            
-            gal1: prefixValue + "1.png",
-            gal2: prefixValue + "2.png",
-            gal3: prefixValue + "3.png",
+            img: "images/menu/" + prefixValue + ".png",            
+            gal1: "images/menu/" + prefixValue + "1.png",
+            gal2: "images/menu/" + prefixValue + "2.png",
+            gal3: "images/menu/" + prefixValue + "3.png",
         };
 
         push(itemsInDB, item);
