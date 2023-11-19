@@ -139,17 +139,45 @@ function renderItems(item, id) {
     editButton.className = "edit-button";
     editButton.addEventListener("click", () => {
         modal.style.display = "block";
-        document.getElementById('edit-name-field').placeholder = item.name;
-        document.getElementById('edit-price-field').placeholder = item.price;
-        document.getElementById('edit-disc-field').placeholder = item.disc;
-        document.getElementById('edit-longdisc-field').placeholder = item.longdisc;
-        document.getElementById('edit-img-field').placeholder = item.img;
-        document.getElementById('edit-gal1-field').placeholder = item.gal1;
-        document.getElementById('edit-gal2-field').placeholder = item.gal2;
-        document.getElementById('edit-gal3-field').placeholder = item.gal3;
+        document.getElementById('edit-name-field').value = item.name;
+        document.getElementById('edit-price-field').value = item.price;
+        document.getElementById('edit-disc-field').value = item.disc;
+        document.getElementById('edit-longdisc-field').value = item.longdisc;
+        document.getElementById('edit-img-field').value = item.img;
+        document.getElementById('edit-gal1-field').value = item.gal1;
+        document.getElementById('edit-gal2-field').value = item.gal2;
+        document.getElementById('edit-gal3-field').value = item.gal3;
         span.onclick = function() {
             modal.style.display = "none";
         }
+        const saveButton = document.getElementById('save-button');
+        saveButton.addEventListener("click", () => {
+            let editNameValue = document.getElementById('edit-name-field').value.toLowerCase();    
+            let editPriceValue = document.getElementById('edit-price-field').value;
+            let editDiscValue = document.getElementById('edit-disc-field').value;
+            let editLongdiscValue = document.getElementById('edit-longdisc-field').value;
+            let editImgValue = document.getElementById('edit-img-field').value;
+            let editGal1Value = document.getElementById('edit-gal1-field').value;
+            let editGal2Value = document.getElementById('edit-gal2-field').value;
+            let editGal3Value = document.getElementById('edit-gal3-field').value;
+            if (editNameValue.trim() === "" || editDiscValue.trim() === "" || editLongdiscValue.trim() === "" || editImgValue.trim() === "" || editGal1Value.trim() === "" || editGal2Value.trim() === "" || editGal3Value.trim() === "" || editPriceValue === 0 || isNaN(editPriceValue)) {
+                alert("Por favor, complete todas las secciones.");
+            }else {
+                let item = {
+                    name: editNameValue,
+                    price: editPriceValue,
+                    disc: editDiscValue,
+                    longdisc: editLongdiscValue,
+                    img: editImgValue,            
+                    gal1: editGal1Value,
+                    gal2: editGal2Value,
+                    gal3: editGal3Value,
+                };
+                const itemRef = ref(database, 'items/' + id);
+                update(itemRef, updatedFields);
+                modal.style.display = "none";
+            }
+        });
     });
 
     
