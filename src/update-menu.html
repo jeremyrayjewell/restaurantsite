@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="admin.css">
+    <title>Actualizar</title>
+</head>
+<body>
+    <h3>Actualizar el menú</h3>
+            <div class="add-container">
+
+                <label for="name-field">Nombre del producto (máximo 12 caracteres):</label>
+                <input type="text" id="name-field" placeholder="Nombre" maxlength="12">
+
+                <br>
+                <label for="add-button">Confirme todos los detalles antes de enviar.</label>
+                <button id="add-button">Agregar a la lista del menú</button>
+                <div class="menu-container">
+                    <ul id="items-list"></ul>
+                </div>
+            </div>
+
+            <script src="src/menu.js" type="module"></script>
+
+</body>
+</html>

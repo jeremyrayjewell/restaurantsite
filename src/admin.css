@@ -21,7 +21,6 @@
     
     --element-padding: 0.8em; 
     
-    --maximum-width: 300px; 
 }
 
 
@@ -79,13 +78,30 @@ p, span, label {
     margin: 0;
 }
 
-#update-menu-view, #delete-menu-view, #add-menu-view, 
+#update-menu-view, #add-menu-view, 
 #inventory-view, #finances-view, #orders-view {
     display: none;
+    width: 100vw;
+    height: 100vh;
     margin: 0;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+#add-menu-view input {
+    font-family: sans-serif;
+    padding: 0;
+    border-radius: 0;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1.1em;
+    text-align: left;
+    border: solid black 1px;
+}
+
+#add-menu-view textarea {
+    min-height: 150px;
 }
 
 #return-btn {
@@ -210,6 +226,15 @@ button:hover {
     visibility: visible;
 }
 
+/* iframes */
+
+#add-menu-iframe, #update-menu-iframe, #inventory-iframe, #finances-iframe, #orders-iframe {
+    border: none;
+    width: 60%;
+    height: 100vh; 
+    overflow: hidden
+}
+
 /* Update */
 
 /* Add */
@@ -217,7 +242,7 @@ button:hover {
 .add-container {
     display: flex;
     flex-direction: column;
-    max-width: 300px;
+    max-width: 600px;
 }
 
 textarea {
