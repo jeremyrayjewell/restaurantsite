@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
-import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
     databaseURL: "https://playground-c712b-default-rtdb.firebaseio.com/"
@@ -162,7 +162,7 @@ function renderItems(item, id) {
             let editGal3Value = document.getElementById('edit-gal3-field').value;
             if (editNameValue.trim() === "" || editDiscValue.trim() === "" || editLongdiscValue.trim() === "" || editImgValue.trim() === "" || editGal1Value.trim() === "" || editGal2Value.trim() === "" || editGal3Value.trim() === "" || editPriceValue === 0 || isNaN(editPriceValue)) {
                 alert("Por favor, complete todas las secciones.");
-            }else {
+            } else {
                 let item = {
                     name: editNameValue,
                     price: editPriceValue,
@@ -174,7 +174,7 @@ function renderItems(item, id) {
                     gal3: editGal3Value,
                 };
                 const itemRef = ref(database, 'items/' + id);
-                update(itemRef, updatedFields);
+                update(itemRef, item);
                 modal.style.display = "none";
             }
         });
