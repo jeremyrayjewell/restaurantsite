@@ -11,8 +11,8 @@ const itemsInDB = ref(database, "items")
 
 const nameFieldEl = document.getElementById("name-field")
 const priceFieldEl = document.getElementById("price-field")
-const discFieldEl = document.getElementById("disc-field")
-const longdiscFieldEl = document.getElementById("longdisc-field")
+const descFieldEl = document.getElementById("desc-field")
+const longdescFieldEl = document.getElementById("longdesc-field")
 const prefixFieldEl = document.getElementById("prefix-field")
 const addButtonEl = document.getElementById("add-button")
 const itemsListEl = document.getElementById("items-list")
@@ -31,19 +31,19 @@ addButtonEl.addEventListener("click", () => {
     // console.log("add button clicked");
     let nameValue = nameFieldEl.value.toLowerCase();    
     let priceValue = priceFieldEl.value;
-    let discValue = discFieldEl.value;
-    let longdiscValue = longdiscFieldEl.value;
+    let descValue = descFieldEl.value;
+    let longdescValue = longdescFieldEl.value;
     let prefixValue = prefixFieldEl.value;
 
 
-    if (nameValue.trim() === "" || discValue.trim() === "" || longdiscValue.trim() === "" || prefixValue.trim() === "" || priceValue === 0 || isNaN(priceValue)) {
+    if (nameValue.trim() === "" || descValue.trim() === "" || longdescValue.trim() === "" || prefixValue.trim() === "" || priceValue === 0 || isNaN(priceValue)) {
     alert("Por favor, complete todas las secciones.");
     }else {
         let item = {
             name: nameValue,
             price: priceValue,
-            disc: discValue,
-            longdisc: longdiscValue,
+            desc: descValue,
+            longdesc: longdescValue,
             img: "images/menu/" + prefixValue + ".png",            
             gal1: "images/menu/" + prefixValue + "1.png",
             gal2: "images/menu/" + prefixValue + "2.png",
@@ -53,8 +53,8 @@ addButtonEl.addEventListener("click", () => {
         push(itemsInDB, item);
         clearNameFieldEl();  
         clearPriceFieldEl();
-        clearDiscFieldEl();
-        clearLongdiscFieldEl();
+        clearDescFieldEl();
+        clearlongdescFieldEl();
         clearPrefixFieldEl();
     }
 });
@@ -73,12 +73,12 @@ function clearPriceFieldEl() {
     priceFieldEl.value = ""
 }
 
-function clearDiscFieldEl() {
-    discFieldEl.value = ""
+function clearDescFieldEl() {
+    descFieldEl.value = ""
 }
 
-function clearLongdiscFieldEl() {
-    longdiscFieldEl.value = ""
+function clearlongdescFieldEl() {
+    longdescFieldEl.value = ""
 }
 
 function clearPrefixFieldEl() {
@@ -92,8 +92,8 @@ function renderItems(item, id) {
     
     itemEl.innerHTML = ` 
         <span style="font-weight: bold; font-size: 25px;">${item.name} </span> <code>&#8212;</code> ₲${item.price} 
-        <br><span style="font-style: italic;">Breve (disc):</span> ${item.disc} 
-        <br><span style="font-style: italic;">Larga (longdisc):</span> ${item.longdisc} 
+        <br><span style="font-style: italic;">Breve (desc):</span> ${item.desc} 
+        <br><span style="font-style: italic;">Larga (longdesc):</span> ${item.longdesc} 
         <br><span style="font-style: italic;">Imágenes:</span><ul><li>${item.img}
             </li><li>${item.gal1}
             </li><li>${item.gal2}
@@ -141,8 +141,8 @@ function renderItems(item, id) {
         modal.style.display = "block";
         document.getElementById('edit-name-field').value = item.name;
         document.getElementById('edit-price-field').value = item.price;
-        document.getElementById('edit-disc-field').value = item.disc;
-        document.getElementById('edit-longdisc-field').value = item.longdisc;
+        document.getElementById('edit-desc-field').value = item.desc;
+        document.getElementById('edit-longdesc-field').value = item.longdesc;
         document.getElementById('edit-img-field').value = item.img;
         document.getElementById('edit-gal1-field').value = item.gal1;
         document.getElementById('edit-gal2-field').value = item.gal2;
@@ -154,20 +154,20 @@ function renderItems(item, id) {
         saveButton.addEventListener("click", () => {
             let editNameValue = document.getElementById('edit-name-field').value.toLowerCase();    
             let editPriceValue = document.getElementById('edit-price-field').value;
-            let editDiscValue = document.getElementById('edit-disc-field').value;
-            let editLongdiscValue = document.getElementById('edit-longdisc-field').value;
+            let editDescValue = document.getElementById('edit-desc-field').value;
+            let editLongdescValue = document.getElementById('edit-longdesc-field').value;
             let editImgValue = document.getElementById('edit-img-field').value;
             let editGal1Value = document.getElementById('edit-gal1-field').value;
             let editGal2Value = document.getElementById('edit-gal2-field').value;
             let editGal3Value = document.getElementById('edit-gal3-field').value;
-            if (editNameValue.trim() === "" || editDiscValue.trim() === "" || editLongdiscValue.trim() === "" || editImgValue.trim() === "" || editGal1Value.trim() === "" || editGal2Value.trim() === "" || editGal3Value.trim() === "" || editPriceValue === 0 || isNaN(editPriceValue)) {
+            if (editNameValue.trim() === "" || editDescValue.trim() === "" || editLongdescValue.trim() === "" || editImgValue.trim() === "" || editGal1Value.trim() === "" || editGal2Value.trim() === "" || editGal3Value.trim() === "" || editPriceValue === 0 || isNaN(editPriceValue)) {
                 alert("Por favor, complete todas las secciones.");
             } else {
                 let item = {
                     name: editNameValue,
                     price: editPriceValue,
-                    disc: editDiscValue,
-                    longdisc: editLongdiscValue,
+                    desc: editDescValue,
+                    longdesc: editLongdescValue,
                     img: editImgValue,            
                     gal1: editGal1Value,
                     gal2: editGal2Value,
