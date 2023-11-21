@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebas
 import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
-    databaseURL: "https://playground-c712b-default-rtdb.firebaseio.com/"
+    databaseURL: "https://saborcaribe-b3d6f-default-rtdb.firebaseio.com/"
 }
 
 const app = initializeApp(appSettings)
@@ -48,6 +48,7 @@ addButtonEl.addEventListener("click", () => {
             gal1: "images/menu/" + prefixValue + "1.png",
             gal2: "images/menu/" + prefixValue + "2.png",
             gal3: "images/menu/" + prefixValue + "3.png",
+            priority: 0,
         };
 
         push(itemsInDB, item);
@@ -99,7 +100,8 @@ function renderItems(item, id) {
             </li><li>${item.gal2}
             </li><li>${item.gal3} 
         </li></ul>
-        <span style="font-style: italic;">ID de base de datos:</span> ${id}`
+        <span style="font-style: italic;">Posición del menú:</span> ${item.priority}
+        <br><span style="font-style: italic;">ID de base de datos:</span> ${id}`
     ;
 
     const deleteButton = document.createElement("button");
