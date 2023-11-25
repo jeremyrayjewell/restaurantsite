@@ -21,25 +21,54 @@ const itemsInDB = ref(database, "items");
 const onMenuItemsListEl = document.getElementById('on-menu-items-list');
 const offMenuItemsListEl = document.getElementById('off-menu-items-list');
 
+
 onValue(itemsInDB, (snapshot) => {
+    const onMenuItems = [];
+    const offMenuItems = [];
+
     snapshot.forEach((childSnapshot) => {
         const item = childSnapshot.val();
         const id = childSnapshot.key;
-        renderOnMenuItems(item, id);
-        renderOffMenuItems(item, id);
+
+        if (item.priority > 0) {
+            onMenuItems.push({ ...item, id });
+        } else {
+            offMenuItems.push({ ...item, id });
+        }
     });
+
+    // Sort onMenuItems by priority
+    onMenuItems.sort((a, b) => a.priority - b.priority);
+
+    onMenuItems.forEach((item, index) => {
+        const newPriority = index + 1;
+        if (item.priority !== newPriority) {
+            update(ref(database, 'items/' + item.id), {
+                priority: newPriority
+            });
+        }
+    });
+
+    // Render onMenuItems
+    onMenuItemsListEl.innerHTML = '';
+    onMenuItems.forEach((item) => renderOnMenuItems(item));
+    
+    // Render offMenuItems
+    offMenuItemsListEl.innerHTML = '';
+    offMenuItems.forEach((item) => renderOffMenuItems(item));
 });
 
 
-function clearItemsListEl() {
-    itemsListEl.innerHTML = ""
-}
 
-function renderOnMenuItems(item, id) {
-    if (item.priority > 0) {
-        const itemEl = document.createElement("li");
+// function clearItemsListEl() {
+//     itemsListEl.innerHTML = ""
+// }
 
-        itemEl.style.position = "relative"; // needed for the absolute positioning of the shading
+function renderOnMenuItems(item) {
+    const itemEl = document.createElement("li");
+
+
+        itemEl.style.position = "relative"; 
 
         const shadingEl = document.createElement("div");
         shadingEl.style.position = "absolute";
@@ -54,8 +83,7 @@ function renderOnMenuItems(item, id) {
         itemEl.innerHTML += ` 
         <img src="../${item.img}" width="150" height="75">
         <span style="font-weight: bold; font-size: 25px;">${item.name} </span> <code>&#8212;</code> ₲${item.price} 
-        </li></ul>
-        <span style="font-style: italic;">Posición del menú:</span> ${item.priority}`
+        </li></ol>`
         ;
         const offOfMenuButton = document.createElement("button");
         offOfMenuButton.style.backgroundColor = "red";
@@ -64,34 +92,75 @@ function renderOnMenuItems(item, id) {
         offOfMenuButton.style.padding = "5px";
         offOfMenuButton.style.width = "37px";
         offOfMenuButton.style.height = "37px";
-        offOfMenuButton.style.opacity = "0.5";
+        offOfMenuButton.style.opacity = "0.2";
         offOfMenuButton.style.margin = "0px 20px 50px";
         offOfMenuButton.textContent = "❌";
         offOfMenuButton.style.fontSize = "20px";
-        offOfMenuButton.className = "off-menu-button";            
+        offOfMenuButton.className = "off-menu-button"; 
+        offOfMenuButton.addEventListener('mouseover', function() {
+            this.style.opacity = "0.5";
+        });
+        offOfMenuButton.addEventListener('mouseout', function() {
+            this.style.opacity = "0.2";
+        });           
         offOfMenuButton.addEventListener("click", () => {
-            item.priority = 0;
-            onMenuItemsListEl.innerHTML = '';
-            offMenuItemsListEl.innerHTML = '';
-            update(ref(database, 'items/' + id), {
-                priority: item.priority
-            }).then(() => {
-                renderOnMenuItems();
-                renderOffMenuItems();
-            }).catch((error) => {
-                console.error("Error updating document: ", error);
+            update(ref(database, 'items/' + item.id), {
+                priority: 0
             });
         });
+    
+        const upMenuButton = document.createElement("button");
+        upMenuButton.style.backgroundColor = "blue";
+        upMenuButton.style.color = "blue";
+        upMenuButton.style.border = "none";
+        upMenuButton.style.padding = "5px";
+        upMenuButton.style.width = "37px";
+        upMenuButton.style.height = "37px";
+        upMenuButton.style.opacity = "0.2";
+        upMenuButton.style.margin = "0px 0px 50px";
+        upMenuButton.textContent = "🔺";
+        upMenuButton.style.fontSize = "20px";
+        upMenuButton.className = "up-menu-button";
+        upMenuButton.addEventListener('mouseover', function() {
+            this.style.opacity = "0.4";
+        });
+        upMenuButton.addEventListener('mouseout', function() {
+            this.style.opacity = "0.2";
+        });                
+        upMenuButton.addEventListener("click", () => {});
 
+        const downMenuButton = document.createElement("button");
+        downMenuButton.style.backgroundColor = "blue";
+        downMenuButton.style.color = "blue";
+        downMenuButton.style.border = "none";
+        downMenuButton.style.padding = "5px";
+        downMenuButton.style.width = "37px";
+        downMenuButton.style.height = "37px";
+        downMenuButton.style.opacity = "0.2";
+        downMenuButton.style.margin = "0px 5px 50px";
+        downMenuButton.textContent = "🔻";
+        downMenuButton.style.fontSize = "20px";
+        downMenuButton.className = "down-menu-button";
+        downMenuButton.addEventListener('mouseover', function() {
+            this.style.opacity = "0.4";
+        });
+        downMenuButton.addEventListener('mouseout', function() {
+            this.style.opacity = "0.2";
+        });                
+        downMenuButton.addEventListener("click", () => {});
+    
         itemEl.appendChild(offOfMenuButton);
+
+        itemEl.appendChild(upMenuButton);
+
+        itemEl.appendChild(downMenuButton);
+
         onMenuItemsListEl.appendChild(itemEl);
     }
-}
 
-function renderOffMenuItems(item, id) {
-    if (item.priority === 0) {
-        const itemEl = document.createElement("li");
-        itemEl.style.position = "relative"; // needed for the absolute positioning of the shading
+function renderOffMenuItems(item) {
+    const itemEl = document.createElement("li");
+        itemEl.style.position = "relative"; 
 
         const shadingEl = document.createElement("div");
         shadingEl.style.position = "absolute";
@@ -106,8 +175,7 @@ function renderOffMenuItems(item, id) {
         itemEl.innerHTML += ` 
         <img src="../${item.img}" width="150" height="75">
         <span style="font-weight: bold; font-size: 25px;">${item.name} </span> <code>&#8212;</code> ₲${item.price} 
-        </li></ul>
-        <span style="font-style: italic;">Posición del menú:</span> ${item.priority}`
+        </li></ul>`
         ;
 
         const ontoMenuButton = document.createElement("button");
@@ -117,40 +185,25 @@ function renderOffMenuItems(item, id) {
         ontoMenuButton.style.padding = "5px";
         ontoMenuButton.style.width = "37px";
         ontoMenuButton.style.height = "37px";
-        ontoMenuButton.style.opacity = "0.5";
+        ontoMenuButton.style.opacity = "0.2";
         ontoMenuButton.style.margin = "0px 20px 50px";
         ontoMenuButton.textContent = "🍽️";
         ontoMenuButton.style.fontSize = "20px";
-        ontoMenuButton.className = "on-menu-button";            
+        ontoMenuButton.className = "on-menu-button";
+        ontoMenuButton.addEventListener('mouseover', function() {
+            this.style.opacity = "0.5";
+        });
+        ontoMenuButton.addEventListener('mouseout', function() {
+            this.style.opacity = "0.2";
+        });            
         ontoMenuButton.addEventListener("click", () => {
-            onMenuItemsListEl.innerHTML = '';
-            offMenuItemsListEl.innerHTML = '';
-            update(ref(database, 'items/' + id), {
+            update(ref(database, 'items/' + item.id), {
                 priority: 1
             }).then(() => {
-                renderOnMenuItems();
-                renderOffMenuItems();
-            }).catch((error) => {
-                console.error("Error updating document: ", error);
+                onValue();
             });
         });
 
-        itemEl.appendChild(ontoMenuButton);
-        offMenuItemsListEl.appendChild(itemEl);
-    }
+    itemEl.appendChild(ontoMenuButton);
+    offMenuItemsListEl.appendChild(itemEl);
 }
-
-
-// function renderItems(item, id) {
-//     const itemEl = document.createElement("li");
-    
-//     itemEl.innerHTML = ` 
-//         <img src="../${item.img}" width="150" height="75">
-//         <span style="font-weight: bold; font-size: 25px;">${item.name} </span> <code>&#8212;</code> ₲${item.price} 
-//         </li></ul>
-//         <span style="font-style: italic;">Posición del menú:</span> ${item.priority}
-//         <br><br><hr><br><br>`
-//     ;
-    
-//     itemsListEl.appendChild(itemEl);
-// }
