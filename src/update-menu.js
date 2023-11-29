@@ -83,7 +83,8 @@ function renderOnMenuItems(item) {
         itemEl.innerHTML += ` 
         <img src="../${item.img}" width="150" height="75">
         <span style="font-weight: bold; font-size: 25px;">${item.name} </span> <code>&#8212;</code> ₲${item.price} 
-        </li></ol>`
+        </li></ol><br>
+        <p>${item.priority}</p>`
         ;
         const offOfMenuButton = document.createElement("button");
         offOfMenuButton.style.backgroundColor = "red";
@@ -127,7 +128,17 @@ function renderOnMenuItems(item) {
         upMenuButton.addEventListener('mouseout', function() {
             this.style.opacity = "0.2";
         });                
-        upMenuButton.addEventListener("click", () => {});
+        let itemsArray = []; // Assume this is your array of items
+
+        upMenuButton.addEventListener("click", () => {
+            const updatedPriority = item.priority - 1;
+            update(ref(database, 'items/' + item.id), {
+                priority: updatedPriority
+            }).then(() => {
+                const samePriorityItems = itemsArray.filter(otherItem => otherItem.priority === updatedPriority);
+                console.log(samePriorityItems); 
+            });
+        });
 
         const downMenuButton = document.createElement("button");
         downMenuButton.style.backgroundColor = "blue";
