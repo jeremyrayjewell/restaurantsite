@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+import { getDatabase, ref, push, onValue, remove, update, orderByChild, startAt } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAlQrgx_Jt9utW1XVuM90OuSS6y2YHWWN4",
@@ -16,53 +16,32 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 const itemsInDB = ref(database, "items");
+const menuItemsInDB = ref(database, "menu-items");
 
 // const itemsListEl = document.getElementById("items-list")
 const onMenuItemsListEl = document.getElementById('on-menu-items-list');
 const offMenuItemsListEl = document.getElementById('off-menu-items-list');
 
+//ON MENU
 
 onValue(itemsInDB, (snapshot) => {
     const onMenuItems = [];
-    const offMenuItems = [];
 
     snapshot.forEach((childSnapshot) => {
         const item = childSnapshot.val();
         const id = childSnapshot.key;
 
-        if (item.priority > 0) {
-            onMenuItems.push({ ...item, id });
-        } else {
-            offMenuItems.push({ ...item, id });
-        }
+        onMenuItems.push({ ...item, id });
     });
 
     // Sort onMenuItems by priority
-    onMenuItems.sort((a, b) => a.priority - b.priority);
-
-    onMenuItems.forEach((item, index) => {
-        const newPriority = index + 1;
-        if (item.priority !== newPriority) {
-            update(ref(database, 'items/' + item.id), {
-                priority: newPriority
-            });
-        }
-    });
+    onMenuItems.sort((b, a) => a.priority - b.priority);
 
     // Render onMenuItems
     onMenuItemsListEl.innerHTML = '';
     onMenuItems.forEach((item) => renderOnMenuItems(item));
-    
-    // Render offMenuItems
-    offMenuItemsListEl.innerHTML = '';
-    offMenuItems.forEach((item) => renderOffMenuItems(item));
 });
 
-
-
-// function clearItemsListEl() {
-//     itemsListEl.innerHTML = ""
-// }
 
 function renderOnMenuItems(item) {
     const itemEl = document.createElement("li");
@@ -105,9 +84,25 @@ function renderOnMenuItems(item) {
             this.style.opacity = "0.2";
         });           
         offOfMenuButton.addEventListener("click", () => {
-            update(ref(database, 'items/' + item.id), {
-                priority: 0
-            });
+            const itemRef = ref(database, 'items/' + item.id);
+            const menuItemRef = ref(database, 'menu-items/' + item.id);
+
+            // Remove the item from the items table
+            remove(itemRef)
+                .then(() => {
+                    // Reset the item's priority
+                    item.priority = 0;
+
+                    // Add the item to the menu-items table
+                    update(menuItemRef, item)
+                        .then(() => {
+                            // You can use onValue here if you want to listen for changes
+                            onValue(menuItemRef, (snapshot) => {
+                                const data = snapshot.val();
+                                // Do something with data
+                            });
+                        });
+                });
         });
     
         const upMenuButton = document.createElement("button");
@@ -131,12 +126,11 @@ function renderOnMenuItems(item) {
         let itemsArray = []; // Assume this is your array of items
 
         upMenuButton.addEventListener("click", () => {
-            const updatedPriority = item.priority - 1;
+            const updatedPriority = item.priority + 2;
             update(ref(database, 'items/' + item.id), {
                 priority: updatedPriority
             }).then(() => {
-                const samePriorityItems = itemsArray.filter(otherItem => otherItem.priority === updatedPriority);
-                console.log(samePriorityItems); 
+                fetchUpdatedData();
             });
         });
 
@@ -158,8 +152,15 @@ function renderOnMenuItems(item) {
         downMenuButton.addEventListener('mouseout', function() {
             this.style.opacity = "0.2";
         });                
-        downMenuButton.addEventListener("click", () => {});
-    
+        downMenuButton.addEventListener("click", () => {
+            const updatedPriority = item.priority - 2;
+            update(ref(database, 'items/' + item.id), {
+                priority: updatedPriority
+            }).then(() => {
+                fetchUpdatedData();
+            });
+        });
+
         itemEl.appendChild(offOfMenuButton);
 
         itemEl.appendChild(upMenuButton);
@@ -168,6 +169,30 @@ function renderOnMenuItems(item) {
 
         onMenuItemsListEl.appendChild(itemEl);
     }
+
+
+
+
+// OFF MENU
+
+onValue(menuItemsInDB, (snapshot) => {
+    const offMenuItems = [];
+
+    snapshot.forEach((childSnapshot) => {
+        const item = childSnapshot.val();
+        const id = childSnapshot.key;
+
+        if (item.priority <= 0) {
+            offMenuItems.push({ ...item, id });
+        }
+    });
+
+    // Clear existing items from the DOM
+    offMenuItemsListEl.innerHTML = '';
+
+    // Render new items
+    offMenuItems.forEach(renderOffMenuItems);
+});
 
 function renderOffMenuItems(item) {
     const itemEl = document.createElement("li");
@@ -208,13 +233,43 @@ function renderOffMenuItems(item) {
             this.style.opacity = "0.2";
         });            
         ontoMenuButton.addEventListener("click", () => {
-            update(ref(database, 'items/' + item.id), {
-                priority: 1
-            }).then(() => {
-                onValue();
-            });
-        });
+            const itemRef = ref(database, 'items/' + item.id);
+            const menuItemRef = ref(database, 'menu-items/' + item.id);
 
+            // Remove the item from the menu-items table
+            remove(menuItemRef)
+                .then(() => {
+                    // Add the item to the items table
+                    update(itemRef, item)
+                        .then(() => {
+                            // You can use onValue here if you want to listen for changes
+                            onValue(itemRef, (snapshot) => {
+                                const data = snapshot.val();
+                                // Do something with data
+                            });
+                        });
+                });
+        });
     itemEl.appendChild(ontoMenuButton);
     offMenuItemsListEl.appendChild(itemEl);
+}
+
+function fetchUpdatedData() {
+    onValue(itemsInDB, (snapshot) => {
+        const onMenuItems = [];
+
+        snapshot.forEach((childSnapshot) => {
+            const item = childSnapshot.val();
+            const id = childSnapshot.key;
+
+            onMenuItems.push({ ...item, id });
+        });
+
+        // Sort onMenuItems by priority in descending order
+        onMenuItems.sort((a, b) => b.priority - a.priority);
+
+        // Render onMenuItems
+        onMenuItemsListEl.innerHTML = '';
+        onMenuItems.forEach((item) => renderOnMenuItems(item));
+    });
 }

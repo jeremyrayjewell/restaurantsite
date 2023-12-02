@@ -15,7 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
-const itemsInDB = ref(database, "items");
+const itemsInDB = ref(database, "menu-items");
 
 // rest of your code...
 
