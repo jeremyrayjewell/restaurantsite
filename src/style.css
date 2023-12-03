@@ -186,7 +186,6 @@ h2 {
   gap: 30px;
   justify-content: center;
   margin-bottom: 50px;
-  background-image: url('..images/border-left.png');
   background-repeat: repeat-y;
   background-position: left;
 }
