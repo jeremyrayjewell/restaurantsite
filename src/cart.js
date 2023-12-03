@@ -1,3 +1,10 @@
+import { database, ref, get } from "./Data.js";
+import { itemsData } from './main.js';
+
+const itemsRef = ref(database, "items");
+
+
+
 let ShoppingCart = document.getElementById("shopping-cart");
 let label = document.getElementById("label");
 

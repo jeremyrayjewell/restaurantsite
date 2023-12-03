@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-import { getDatabase, ref, child, get, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+import { getDatabase, ref, get, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyAlQrgx_Jt9utW1XVuM90OuSS6y2YHWWN4",
@@ -16,27 +17,4 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 
-let itemsData;  // Declare itemsData variable
-
-const itemsRef = ref(database, "items");
-
-get(itemsRef)
-  .then((snapshot) => {
-    if (snapshot.exists()) {
-      itemsData = [];  // Initialize itemsData as an empty array
-      snapshot.forEach((childSnapshot) => {
-        const item = {
-          id: childSnapshot.key,
-          ...childSnapshot.val(),
-        };
-        itemsData.push(item);
-      });
-      // Use the updated itemsData for further processing
-      console.log(itemsData);
-    } else {
-      console.error("No data available in the database");
-    }
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+export { database, ref, get, onValue };

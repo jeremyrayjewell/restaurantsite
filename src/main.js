@@ -1,92 +1,131 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-import { getDatabase, ref, child, get, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAlQrgx_Jt9utW1XVuM90OuSS6y2YHWWN4",
-  authDomain: "saborcaribe-b3d6f.firebaseapp.com",
-  projectId: "saborcaribe-b3d6f",
-  storageBucket: "saborcaribe-b3d6f.appspot.com",
-  messagingSenderId: "536011684254",
-  appId: "1:536011684254:web:cbd83b4eda113b81ba7e8f",
-  databaseURL: "https://saborcaribe-b3d6f-default-rtdb.firebaseio.com/"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
-
-let itemsData;  // Declare itemsData variable
+import { database, ref, get } from "./Data.js";
 
 const itemsRef = ref(database, "items");
-
-let shop = document.getElementById("shop");
-
-
+const shop = document.getElementById("shop");
 let basket = JSON.parse(localStorage.getItem("data")) || [];
 
-
-let generateShop = (itemsData) => {
+const generateShop = (itemsData) => {
   shop.innerHTML = itemsData.map((x) => {
-    let { id, name, desc, longdesc, img, price, gal1, gal2, gal3 } = x;
-    let search = basket.find((y) => y.id === id) || [];
+    const { id, name, desc, longdesc, img, price, gal1, gal2, gal3 } = x;
 
-    function openModal(id) {
-      document.getElementById(`myModal-${id}`).style.display = 'flex';
-    }
-
-    function closeModal(id) {
-      document.getElementById(`myModal-${id}`).style.display = 'none';
-    }
-
-    
-
+    const search = basket.find((y) => y.id === id) || { item: 0 };
 
     return `
-      <div id=product-id-${id} class="item">
-        <img width="220" src=${img} alt="" onclick="openModal${id}()" style="cursor: pointer;">
+      <div id="product-id-${id}" class="item">
+        <img width="220" src="${img}" alt="" class="product-img" data-id="${id}">
         <div class="details">
-          <h3 onclick="openModal${id}()" style="cursor: pointer;">${name}</h3>
-          <p onclick="openModal${id}()" style="cursor: pointer;">${desc}</p>
+          <h3 class="product-name" data-id="${id}">${name}</h3>
+          <p class="product-desc" data-id="${id}">${desc}</p>
           <div class="price-quantity">
-            <h5 onclick="openModal${id}()" style="cursor: pointer;">₲  ${price} </h5>
+            <h5 class="product-price" data-id="${id}">₲ ${price}</h5>
             <div class="buttons">
-              <i onclick="decrement(${id})" class="bi bi-dash-lg"></i>
-              <div id=${id} class="quantity">${
-                search.item === undefined ? 0 : search.item
-              }</div>
-              <i onclick="increment(${id})" class="bi bi-plus-lg"></i>
+              <i class="bi bi-dash-lg decrement" data-id="${id}"></i>
+              <div id="${id}" class="quantity">${search.item}</div>
+              <i class="bi bi-plus-lg increment" data-id="${id}"></i>
             </div>
           </div>
         </div>
         <div id="myModal-${id}" class="modal">
           <div class="modal-content">
-            <span class="close-btn" onclick="closeModal${id}()">&times;</span>
+            <span class="close-btn" data-id="${id}">&times;</span>
             <h2 id="modalName">${name}</h2>
-            <img id="modalImg" src=${img} alt="Product image">
+            <img id="modalImg" src="${img}" alt="Product image">
             <p id="modalDesc">${longdesc}</p>
             <div id="modalGallery" class="modal-gallery">
-              <img class="modal-gallery-img" src=${gal1} alt="Product image">
-              <img class="modal-gallery-img" src=${gal2} alt="Product image">
-              <img class="modal-gallery-img" src=${gal3} alt="Product image">
+              <img class="modal-gallery-img" src="${gal1}" alt="Product image">
+              <img class="modal-gallery-img" src="${gal2}" alt="Product image">
+              <img class="modal-gallery-img" src="${gal3}" alt="Product image">
             </div>
           </div>
         </div>
       </div>
     `;
   }).join("");
+
+  attachEventListeners();
 };
 
+const attachEventListeners = () => {
+  shop.addEventListener("click", (event) => {
+    const id = event.target.dataset.id;
+    if (id) {
+      if (event.target.classList.contains("product-img") ||
+          event.target.classList.contains("product-name") ||
+          event.target.classList.contains("product-desc") ||
+          event.target.classList.contains("product-price")) {
+        openModal(id);
+      } else if (event.target.classList.contains("decrement")) {
+        decrement(id);
+      } else if (event.target.classList.contains("increment")) {
+        increment(id);
+      }
+    }
+  });
 
+  shop.addEventListener("click", (event) => {
+    const id = event.target.dataset.id;
+    if (id && event.target.classList.contains("close-btn")) {
+      closeModal(id);
+    }
+  });
+};
 
+const openModal = (id) => {
+  document.getElementById(`myModal-${id}`).style.display = 'flex';
+};
 
-//DATABASE CODE
+const closeModal = (id) => {
+  document.getElementById(`myModal-${id}`).style.display = 'none';
+};
+
+const increment = (id) => {
+  const selectedItem = basket.find((x) => x.id === id);
+
+  if (!selectedItem) {
+    basket.push({ id, item: 1 });
+  } else {
+    selectedItem.item += 1;
+  }
+
+  update(id);
+  saveBasket();
+};
+
+const decrement = (id) => {
+  const selectedItem = basket.find((x) => x.id === id);
+
+  if (!selectedItem || selectedItem.item === 0) {
+    return;
+  }
+
+  selectedItem.item -= 1;
+  update(id);
+  basket = basket.filter((x) => x.item !== 0);
+  saveBasket();
+};
+
+const update = (id) => {
+  const selectedItem = basket.find((x) => x.id === id);
+  document.getElementById(id).innerHTML = selectedItem.item;
+  calculation();
+};
+
+const calculation = () => {
+  const cartIcon = document.getElementById("cartAmount");
+  cartIcon.innerHTML = basket.map((x) => x.item).reduce((x, y) => x + y, 0);
+};
+
+const saveBasket = () => {
+  console.log(basket);
+  localStorage.setItem("data", JSON.stringify(basket));
+};
+
+calculation();
 
 shop.innerHTML = '<p>Cargando...</p>';
 
 get(itemsRef)
   .then((snapshot) => {
-    // Hide the loading indicator after data is retrieved
     shop.innerHTML = "";
 
     if (snapshot.exists()) {
@@ -99,52 +138,6 @@ get(itemsRef)
         itemsData.push(item);
       });
       generateShop(itemsData);
-      let increment = (id) => {
-  let selectedItem = id;
-  let search = basket.find((x) => x.id === selectedItem.id);
-
-  if (search === undefined) {
-    basket.push({
-      id: selectedItem.id,
-      item: 1,
-    });
-  } else {
-    search.item += 1;
-  }
-
-  console.log(basket);
-  update(selectedItem.id);
-  localStorage.setItem("data", JSON.stringify(basket));
-};
-
-let decrement = (id) => {
-  let selectedItem = id;
-  let search = basket.find((x) => x.id === selectedItem.id);
-
-  if (search === undefined) return;
-  else if (search.item === 0) return;
-  else {
-    search.item -= 1;
-  }
-
-  update(selectedItem.id);
-  basket = basket.filter((x) => x.item !== 0);
-  console.log(basket);
-  localStorage.setItem("data", JSON.stringify(basket));
-};
-
-let update = (id) => {
-  let search = basket.find((x) => x.id === id);
-  document.getElementById(id).innerHTML = search.item;
-  calculation();
-};
-
-let calculation = () => {
-  let cartIcon = document.getElementById("cartAmount");
-  cartIcon.innerHTML = basket.map((x) => x.item).reduce((x, y) => x + y, 0);
-};
-
-calculation();
     } else {
       console.error("No data available in the database");
     }
