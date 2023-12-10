@@ -145,3 +145,5 @@ get(itemsRef)
   .catch((error) => {
     console.error(error);
   });
+
+  export { shopItemsData };

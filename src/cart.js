@@ -1,6 +1,5 @@
 import { database, ref, get } from "./Data.js";
-import { itemsData } from './main.js';
-
+import { shopItemsData } from './main.js';
 const itemsRef = ref(database, "items");
 
 
@@ -10,6 +9,10 @@ let label = document.getElementById("label");
 
 let basket = JSON.parse(localStorage.getItem("data")) || [];
 
+/**
+ * ! To calculate total amount of selected Items
+ */
+
 let calculation = () => {
   let cartIcon = document.getElementById("cartAmount");
   cartIcon.innerHTML = basket.map((x) => x.item).reduce((x, y) => x + y, 0);
@@ -17,12 +20,18 @@ let calculation = () => {
 
 calculation();
 
+/**
+ * ! Generates the Cart Page with product cards composed of
+ * ! images, title, price, buttons, & Total price
+ * ? When basket is blank -> show's Cart is Empty
+ */
+
 let generateCartItems = () => {
   if (basket.length !== 0) {
     return (ShoppingCart.innerHTML = basket
       .map((x) => {
         let { id, item } = x;
-        let search = itemsData.find((x) => x.id === id) || {};
+        let search = shopItemsData.find((x) => x.id === id) || [];
         let { img, price, name } = search;
         return `
       <div class="cart-item">
@@ -146,7 +155,7 @@ let TotalAmount = () => {
     let amount = basket
       .map((x) => {
         let { id, item } = x;
-        let filterData = itemsData.find((x) => x.id === id);
+        let filterData = shopItemsData.find((x) => x.id === id);
         return filterData.price * item;
       })
       .reduce((x, y) => x + y, 0);
