@@ -8,7 +8,7 @@ const generateShop = (itemsData) => {
   shop.innerHTML = itemsData.map((x) => {
     const { id, name, desc, longdesc, img, price, gal1, gal2, gal3 } = x;
 
-    const search = basket.find((y) => y.id === id) || { item: 0 };
+    const search = itemsData.find((y) => y.id === id) || { item: 0 };
 
     return `
       <div id="product-id-${id}" class="item">
