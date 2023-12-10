@@ -1,5 +1,5 @@
 import { database, ref, get } from "./Data.js";
-import { shopItemsData } from './main.js';
+import { itemsData } from './main.js';
 const itemsRef = ref(database, "items");
 
 

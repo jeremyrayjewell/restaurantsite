@@ -146,4 +146,4 @@ get(itemsRef)
     console.error(error);
   });
 
-  export { shopItemsData };
+  export { itemsData };
