@@ -5,19 +5,8 @@ const itemsRef = ref(database, "items");
 let ShoppingCart = document.getElementById("shopping-cart");
 let label = document.getElementById("label");
 
-
-/**
- * ! Basket to hold all the selected items
- * ? the getItem part is retrieving data from the local storage
- * ? if local storage is blank, basket becomes an empty array
- */
-
-let basket = JSON.parse(localStorage.getItem("data")) || [];
-let itemsData = JSON.parse(localStorage.getItem('itemsData')) || [];
-
-/**
- * ! To calculate total amount of selected Items
- */
+let basket = JSON.parse(getCookie("data")) || [];
+let itemsData = JSON.parse(getCookie('itemsData')) || [];
 
 let calculation = () => {
   let cartIcon = document.getElementById("cartAmount");
@@ -28,11 +17,6 @@ calculation();
 
 
 
-/**
- * ! Generates the Cart Page with product cards composed of
- * ! images, title, price, buttons, & Total price
- * ? When basket is blank -> show's Cart is Empty
- */
 
 let generateCartItems = () => {
   if (basket.length !== 0) {
@@ -103,7 +87,7 @@ let increment = (id) => {
 
   generateCartItems();
   update(selectedItem); // Here
-  localStorage.setItem("data", JSON.stringify(basket));
+  setCookie("data", JSON.stringify(basket), 7); 
 };
 
 let decrement = (id) => {
@@ -119,7 +103,7 @@ let decrement = (id) => {
   update(selectedItem); // And here
   basket = basket.filter((x) => x.item !== 0);
   generateCartItems();
-  localStorage.setItem("data", JSON.stringify(basket));
+  setCookie("data", JSON.stringify(basket), 7);
 };
 
 /**
@@ -140,25 +124,16 @@ let update = (id) => {
 };
 
 
-/**
- * ! Used to remove 1 selected product card from basket
- * ! using the X [cross] button
- */
+
 
 let removeItem = (id) => {
   let selectedItem = id;
-  basket = basket.filter((x) => x.id !== selectedItem); // Here
+  basket = basket.filter((x) => x.id !== selectedItem);
   calculation();
   generateCartItems();
   TotalAmount();
-  localStorage.setItem("data", JSON.stringify(basket));
+  setCookie("data", JSON.stringify(basket), 7); 
 };
-
-/**
- * ! Used to calculate total amount of the selected Products
- * ! with specific quantity
- * ? When basket is blank, it will show nothing
- */
 
 let TotalAmount = () => {
   if (basket.length !== 0) {
@@ -180,15 +155,11 @@ let TotalAmount = () => {
 
 TotalAmount();
 
-/**
- * ! Used to clear cart, and remove everything from local storage
- */
-
 let clearCart = () => {
   basket = [];
   generateCartItems();
   calculation();
-  localStorage.setItem("data", JSON.stringify(basket));
+  setCookie("data", JSON.stringify(basket), 7); // 7 days expiration
 };
 
 window.clearCart = clearCart;
