@@ -137,10 +137,6 @@ get(itemsRef)
         };
         itemsData.push(item);
       });
-
-      // Sort itemsData in descending order of priority
-      itemsData.sort((a, b) => b.priority - a.priority);
-
       generateShop(itemsData);
     } else {
       console.error("No data available in the database");
