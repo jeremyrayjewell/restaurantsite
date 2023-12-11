@@ -5,18 +5,21 @@ const itemsRef = ref(database, "items");
 let ShoppingCart = document.getElementById("shopping-cart");
 let label = document.getElementById("label");
 
-let basket = JSON.parse(getCookie("data")) || [];
-let itemsData = JSON.parse(getCookie('itemsData')) || [];
+let basket = JSON.parse(localStorage.getItem("data")) || [];
+let itemsData = JSON.parse(localStorage.getItem('itemsData')) || [];
 
 let calculation = () => {
   let cartIcon = document.getElementById("cartAmount");
   cartIcon.innerHTML = basket.map((x) => x.item).reduce((x, y) => x + y, 0);
 };
 
-calculation();
 
 
-
+/**
+ * ! Generates the Cart Page with product cards composed of
+ * ! images, title, price, buttons, & Total price
+ * ? When basket is blank -> show's Cart is Empty
+ */
 
 let generateCartItems = () => {
   if (basket.length !== 0) {
@@ -87,7 +90,7 @@ let increment = (id) => {
 
   generateCartItems();
   update(selectedItem); // Here
-  setCookie("data", JSON.stringify(basket), 7); 
+  localStorage.setItem("data", JSON.stringify(basket));
 };
 
 let decrement = (id) => {
@@ -103,7 +106,7 @@ let decrement = (id) => {
   update(selectedItem); // And here
   basket = basket.filter((x) => x.item !== 0);
   generateCartItems();
-  setCookie("data", JSON.stringify(basket), 7);
+  localStorage.setItem("data", JSON.stringify(basket));
 };
 
 /**
@@ -124,16 +127,25 @@ let update = (id) => {
 };
 
 
-
+/**
+ * ! Used to remove 1 selected product card from basket
+ * ! using the X [cross] button
+ */
 
 let removeItem = (id) => {
   let selectedItem = id;
-  basket = basket.filter((x) => x.id !== selectedItem);
+  basket = basket.filter((x) => x.id !== selectedItem); // Here
   calculation();
   generateCartItems();
   TotalAmount();
-  setCookie("data", JSON.stringify(basket), 7); 
+  localStorage.setItem("data", JSON.stringify(basket));
 };
+
+/**
+ * ! Used to calculate total amount of the selected Products
+ * ! with specific quantity
+ * ? When basket is blank, it will show nothing
+ */
 
 let TotalAmount = () => {
   if (basket.length !== 0) {
@@ -141,7 +153,7 @@ let TotalAmount = () => {
       .map((x) => {
         let { id, item } = x;
         let filterData = itemsData.find((x) => x.id === id);
-        return filterData.price * item;
+        return filterData ? filterData.price * item : 0;
       })
       .reduce((x, y) => x + y, 0);
 
@@ -159,10 +171,10 @@ let clearCart = () => {
   basket = [];
   generateCartItems();
   calculation();
-  setCookie("data", JSON.stringify(basket), 7); // 7 days expiration
+  localStorage.setItem("data", JSON.stringify(basket));
 };
 
 window.clearCart = clearCart;
-window.decrement = decrement;
 window.increment = increment;
+window.decrement = decrement;
 window.removeItem = removeItem;
